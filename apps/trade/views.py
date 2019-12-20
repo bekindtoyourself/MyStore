@@ -11,6 +11,8 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework import mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_extensions.cache.mixins import CacheResponseMixin
+
 
 from .serializers import ShopCartSerializer, ShopCartDetailSerializer, OrderSerializer, OrderDetailSerializer
 from utils.permissions import IsOwnerOrReadOnly
@@ -22,7 +24,7 @@ from MxShop.settings import ali_pub_key_path, private_key_path
 
 User = get_user_model()
 
-class ShoppingCartViewset(viewsets.ModelViewSet):
+class ShoppingCartViewset(CacheResponseMixin, viewsets.ModelViewSet):
     """
     购物车功能
     list:
@@ -70,7 +72,7 @@ class ShoppingCartViewset(viewsets.ModelViewSet):
         return ShopCartSerializer
 
 # 没有修改订单，所以没有 update
-class OrderViewset(mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class OrderViewset(CacheResponseMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     """
     订单管理
     list:

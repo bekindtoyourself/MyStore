@@ -15,6 +15,8 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.throttling import UserRateThrottle
 from rest_framework import status
 from rest_framework.pagination import PageNumberPagination
+from rest_framework_extensions.cache.mixins import CacheResponseMixin
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 
 # Create your views here.
 class GoodsPagination(PageNumberPagination):
@@ -23,10 +25,11 @@ class GoodsPagination(PageNumberPagination):
     page_query_param = 'page'
     max_page_size = 100
 
-class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet, mixins.RetrieveModelMixin):
+class GoodsListViewSet(CacheResponseMixin, mixins.ListModelMixin, viewsets.GenericViewSet, mixins.RetrieveModelMixin):
     """
     List all goods
     """
+    throttle_classes = (UserRateThrottle, AnonRateThrottle)
     queryset = Goods.objects.all()
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
