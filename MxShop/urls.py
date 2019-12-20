@@ -18,7 +18,7 @@ from django.views.static import serve
 from django.views.generic import TemplateView
 
 from MxShop.settings import MEDIA_ROOT
-from goods.views import GoodsListViewSet, CategoryViewSet
+from goods.views import GoodsListViewSet, CategoryViewSet, BannerViewset
 from users.views import SmsCodeViewset, UserViewset
 from user_operation.views import UserFavViewset, LeavingMessageViewset, AddressViewset
 from trade.views import ShoppingCartViewset, OrderViewset, AliPayView
@@ -45,6 +45,8 @@ router.register('address', AddressViewset, base_name='address')
 #购物车 url
 router.register('shopcart', ShoppingCartViewset, base_name='shopcart')
 router.register('orders', OrderViewset, base_name='orders')
+#轮播图 url
+router.register('banners', BannerViewset, base_name='banners')
 
 
 urlpatterns = [
