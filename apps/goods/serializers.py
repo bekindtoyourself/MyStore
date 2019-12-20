@@ -5,8 +5,7 @@ from django.db.models import Q
 
 from rest_framework import serializers
 
-from .models import Goods, GoodsCategory, GoodsImage, Banner, GoodsCategoryBrand
-
+from .models import Goods, GoodsCategory, GoodsImage, Banner, GoodsCategoryBrand, IndexAd
 
 class CategorySerializer3(serializers.ModelSerializer):
     """
@@ -62,10 +61,17 @@ class BrandSerializer(serializers.ModelSerializer):
         model = GoodsCategoryBrand
         fields = "__all__"
 
+class AdGoodsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Goods
+        fields = ('id', 'goods_front_image')
+
 class IndexCategorySerializer(serializers.ModelSerializer):
     brands = BrandSerializer(many=True)
     goods = serializers.SerializerMethodField()
     sub_cat = CategorySerializer2(many=True)
+    ad_goods = serializers.SerializerMethodField()
 
 
     def get_goods(self, obj):
@@ -73,35 +79,26 @@ class IndexCategorySerializer(serializers.ModelSerializer):
         goods_serializer = GoodsSerializer(all_goods, many=True, context={'request': self.context['request']})
         return goods_serializer.data
 
+    def get_ad_goods(self, obj):
+        goods_json = {}
+        ad_goods = IndexAd.objects.filter(category_id=obj.id)
+        if ad_goods:
+            good_ins = ad_goods[0].goods
+            # 第一种方法：
+            # 为了截取两个字段，所以写 AdGoodsSerializer 代替 GoodsSerializer
+            goods_json = AdGoodsSerializer(good_ins, many=False, context={'request': self.context['request']}).data
+            # 第 2 种方法：
+            # may be error, 怎么从一段 json 截取一段
+            # goods_json = ' '.join(("{'id':", str(goods_json['id']), ", 'goods_front_image': ", goods_json['goods_front_image'], "}"))
+
+        # print('goods_json: ', goods_json)
+        return goods_json
+
+
     class Meta:
         model = GoodsCategory
         fields = '__all__'
 
-
-# class IndexCategorySerializer(serializers.ModelSerializer):
-#     brands = BrandSerializer(many=True)
-#     goods = serializers.SerializerMethodField()
-#     sub_cat = CategorySerializer2(many=True)
-#     ad_goods = serializers.SerializerMethodField()
-
-#     def get_ad_goods(self, obj):
-#         goods_json = {}
-#         ad_goods = IndexAd.objects.filter(category_id=obj.id, )
-#         if ad_goods:
-#             good_ins = ad_goods[0].goods
-#             goods_json = GoodsSerializer(good_ins, many=False, context={'request': self.context['request']}).data
-#         return goods_json
-
-
-
-#     def get_goods(self, obj):
-#         all_goods = Goods.objects.filter(Q(category_id=obj.id)|Q(category__parent_category_id=obj.id)|Q(category__parent_category__parent_category_id=obj.id))
-#         goods_serializer = GoodsSerializer(all_goods, many=True, context={'request': self.context['request']})
-#         return goods_serializer.data
-
-#     class Meta:
-#         model = GoodsCategory
-#         fields = "__all__"
 
 
 
@@ -120,39 +117,3 @@ class IndexCategorySerializer(serializers.ModelSerializer):
 #         fields = "__all__"
 
 
-# class BannerSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Banner
-#         fields = "__all__"
-
-
-# class BrandSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = GoodsCategoryBrand
-#         fields = "__all__"
-
-
-# class IndexCategorySerializer(serializers.ModelSerializer):
-#     brands = BrandSerializer(many=True)
-#     goods = serializers.SerializerMethodField()
-#     sub_cat = CategorySerializer2(many=True)
-#     ad_goods = serializers.SerializerMethodField()
-
-#     def get_ad_goods(self, obj):
-#         goods_json = {}
-#         ad_goods = IndexAd.objects.filter(category_id=obj.id, )
-#         if ad_goods:
-#             good_ins = ad_goods[0].goods
-#             goods_json = GoodsSerializer(good_ins, many=False, context={'request': self.context['request']}).data
-#         return goods_json
-
-
-
-#     def get_goods(self, obj):
-#         all_goods = Goods.objects.filter(Q(category_id=obj.id)|Q(category__parent_category_id=obj.id)|Q(category__parent_category__parent_category_id=obj.id))
-#         goods_serializer = GoodsSerializer(all_goods, many=True, context={'request': self.context['request']})
-#         return goods_serializer.data
-
-#     class Meta:
-#         model = GoodsCategory
-#         fields = "__all__"

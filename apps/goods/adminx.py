@@ -12,8 +12,7 @@
 @time: 2017/7/4 17:04
 """
 import xadmin
-from .models import Goods, GoodsCategory, GoodsImage, GoodsCategoryBrand, Banner, HotSearchWords
-from .models import IndexAd
+from .models import Goods, GoodsCategory, GoodsImage, GoodsCategoryBrand, Banner, HotSearchWords, IndexAd
 
 class GoodsAdmin(object):
     list_display = ["name", "click_num", "sold_num", "fav_num", "goods_num", "market_price",
