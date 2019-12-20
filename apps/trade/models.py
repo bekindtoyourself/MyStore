@@ -22,6 +22,7 @@ class ShoppingCart(models.Model):
         verbose_name = '购物车'
         verbose_name_plural = verbose_name
         unique_together = ("user", "goods")
+        index_together = ['user', 'goods']
 
     def __str__(self):
         return "%s(%d)".format(self.goods.name, self.nums)
