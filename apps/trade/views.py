@@ -36,6 +36,30 @@ class ShoppingCartViewset(viewsets.ModelViewSet):
     authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
     lookup_field = 'goods_id'
 
+    def perform_create(self, serializer):
+        shop_cart = serializer.save()
+        goods = shop_cart.goods
+        goods.goods_num -= shop_cart.nums
+        goods.save()
+
+    def perform_destroy(self, instance):
+        goods = instance.goods
+        goods.goods_num += instance.nums
+        goods.save()
+        instance.delete()
+
+    # bug:网页调试的时候，http://127.0.0.1:8001/shopcart/，post 10 ，"goods_num": 90, 再 post 10 ， "goods_num": 70, 不知怎么解决
+    def perform_update(self, serializer):
+        existed_record = ShoppingCart.objects.get(id=serializer.instance.id)
+        existed_nums = existed_record.nums
+        save_record = serializer.save()
+        nums = save_record.nums-existed_nums
+        goods = save_record.goods
+        goods.goods_num -= nums
+        goods.save()
+
+
+
     def get_queryset(self):
         return ShoppingCart.objects.filter(user=self.request.user)
 
