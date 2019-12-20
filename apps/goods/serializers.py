@@ -84,6 +84,7 @@ class IndexCategorySerializer(serializers.ModelSerializer):
         ad_goods = IndexAd.objects.filter(category_id=obj.id)
         if ad_goods:
             good_ins = ad_goods[0].goods
+            # 调用另一个 Serializer ， 为了包含域名，要加 context={'request': self.context['request']} 
             # 第一种方法：
             # 为了截取两个字段，所以写 AdGoodsSerializer 代替 GoodsSerializer
             goods_json = AdGoodsSerializer(good_ins, many=False, context={'request': self.context['request']}).data
