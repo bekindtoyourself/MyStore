@@ -21,17 +21,20 @@ from .models import VerifyCode
 
 User = get_user_model()
 
+
 class CustomBackend(ModelBackend):
     """
     自定义用户验证
     """
+
     def authenticate(self, username=None, password=None, **kwargs):
         try:
-            user = User.objects.get(Q(username=username)|Q(mobile=username))
+            user = User.objects.get(Q(username=username) | Q(mobile=username))
             if user.check_password(password):
                 return user
         except Exception as e:
             return None
+
 
 class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
     """
@@ -65,21 +68,23 @@ class SmsCodeViewset(CreateModelMixin, viewsets.GenericViewSet):
         if sms_status['code'] != 0:
             return Response({
                 'mobile': sms_status['msg']
-                }, status=status.HTTP_400_BAD_REQUEST)
+            }, status=status.HTTP_400_BAD_REQUEST)
         else:
             code_record = VerifyCode(code=code, mobile=mobile)
             code_record.save()
             return Response({
                 'mobile': mobile
-                }, status=status.HTTP_201_CREATED)
-            
+            }, status=status.HTTP_201_CREATED)
+
+
 class UserViewset(CreateModelMixin, viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin):
     """
     用户
     """
 
     queryset = User.objects.all()
-    authentication_classes = (authentication.SessionAuthentication, JSONWebTokenAuthentication)
+    authentication_classes = (
+        authentication.SessionAuthentication, JSONWebTokenAuthentication)
 
     def get_serializer_class(self):
         if self.action == "retrieve":
@@ -94,8 +99,6 @@ class UserViewset(CreateModelMixin, viewsets.GenericViewSet, mixins.RetrieveMode
         elif self.action == 'create':
             return []
         return []
-
-
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -115,8 +118,6 @@ class UserViewset(CreateModelMixin, viewsets.GenericViewSet, mixins.RetrieveMode
 
     def get_object(self):
         return self.request.user
-
-    
 
 
 # class UserViewset(CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
@@ -154,5 +155,3 @@ class UserViewset(CreateModelMixin, viewsets.GenericViewSet, mixins.RetrieveMode
 
 #     def perform_create(self, serializer):
 #         return serializer.save()
-
-

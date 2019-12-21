@@ -24,6 +24,7 @@ from MxShop.settings import ali_pub_key_path, private_key_path
 
 User = get_user_model()
 
+
 class ShoppingCartViewset(CacheResponseMixin, viewsets.ModelViewSet):
     """
     购物车功能
@@ -35,7 +36,8 @@ class ShoppingCartViewset(CacheResponseMixin, viewsets.ModelViewSet):
         删除购物记录
     """
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
-    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    authentication_classes = (
+        JSONWebTokenAuthentication, SessionAuthentication)
     lookup_field = 'goods_id'
 
     def perform_create(self, serializer):
@@ -60,8 +62,6 @@ class ShoppingCartViewset(CacheResponseMixin, viewsets.ModelViewSet):
         goods.goods_num -= nums
         goods.save()
 
-
-
     def get_queryset(self):
         return ShoppingCart.objects.filter(user=self.request.user)
 
@@ -72,6 +72,8 @@ class ShoppingCartViewset(CacheResponseMixin, viewsets.ModelViewSet):
         return ShopCartSerializer
 
 # 没有修改订单，所以没有 update
+
+
 class OrderViewset(CacheResponseMixin, mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     """
     订单管理
@@ -83,7 +85,8 @@ class OrderViewset(CacheResponseMixin, mixins.ListModelMixin, mixins.RetrieveMod
         新增订单
     """
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
-    authentication_classes = (JSONWebTokenAuthentication, SessionAuthentication)
+    authentication_classes = (
+        JSONWebTokenAuthentication, SessionAuthentication)
 
     def get_queryset(self):
         return OrderInfo.objects.filter(user=self.request.user)
@@ -105,6 +108,7 @@ class OrderViewset(CacheResponseMixin, mixins.ListModelMixin, mixins.RetrieveMod
         if self.action == 'retrieve':
             return OrderDetailSerializer
         return OrderSerializer
+
 
 class AliPayView(APIView):
 
@@ -143,7 +147,7 @@ class AliPayView(APIView):
                 existed_order.pay_time = datetime.now()
                 existed_order.save()
 
-            # 
+            #
             response = redirect('index')
             response.set_cookie('nextPath', 'pay', max_age=3)
             return response

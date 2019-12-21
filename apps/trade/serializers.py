@@ -13,6 +13,7 @@ from MxShop.settings import private_key_path, ali_pub_key_path
 # bug: object() takes no parameters
 # fixbug: 'class ShopCartDetailSerializer():' 添加 参数 -> class ShopCartDetailSerializer(serializers.ModelSerializer):
 
+
 class ShopCartDetailSerializer(serializers.ModelSerializer):
     goods = GoodsSerializer(many=False, read_only=True)
 
@@ -20,16 +21,18 @@ class ShopCartDetailSerializer(serializers.ModelSerializer):
         model = ShoppingCart
         fields = ('goods', 'nums')
 
+
 class ShopCartSerializer(serializers.Serializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     nums = serializers.IntegerField(required=True, min_value=1, error_messages={
         "min_value": "商品数量不能小于一",
         "required": "请选择购买数量"
-        })
-    # 外键都是正向取得 
+    })
+    # 外键都是正向取得
     # serializers.Serializer PrimaryKeyRelatedField
     # serializers.ModelSerializer images = GoodsImageSerializer(many=True)
-    goods = serializers.PrimaryKeyRelatedField(required=True, queryset=Goods.objects.all())
+    goods = serializers.PrimaryKeyRelatedField(
+        required=True, queryset=Goods.objects.all())
 
     def create(self, validated_data):
         user = self.context['request'].user
@@ -37,7 +40,7 @@ class ShopCartSerializer(serializers.Serializer):
         nums = validated_data['nums']
 
         existed = ShoppingCart.objects.filter(user=user, goods=goods)
-        
+
         # bug: list index out of range \django\db\models\query.py
         # fixbug: 'existed[0]' isn't exist. 注释掉
         # print('existed: ', existed[0])
@@ -59,11 +62,14 @@ class ShopCartSerializer(serializers.Serializer):
         instance.save()
         return instance
 
+
 class OrderGoodsSerialzier(serializers.ModelSerializer):
     goods = GoodsSerializer(many=False)
+
     class Meta:
         model = OrderGoods
         fields = "__all__"
+
 
 class OrderDetailSerializer(serializers.ModelSerializer):
     goods = OrderGoodsSerialzier(many=True)
@@ -84,8 +90,9 @@ class OrderDetailSerializer(serializers.ModelSerializer):
             out_trade_no=obj.order_sn,
             total_amount=obj.order_mount,
         )
-        
-        re_url = "https://openapi.alipaydev.com/gateway.do?{data}".format(data=url)
+
+        re_url = "https://openapi.alipaydev.com/gateway.do?{data}".format(
+            data=url)
 
         return re_url
 
@@ -120,14 +127,15 @@ class OrderSerializer(serializers.ModelSerializer):
             total_amount=obj.order_mount,
         )
 
-        re_url = "https://openapi.alipaydev.com/gateway.do?{data}".format(data=url)
+        re_url = "https://openapi.alipaydev.com/gateway.do?{data}".format(
+            data=url)
 
-        return re_url    
-
+        return re_url
 
     def generate_order_sn(self):
         from random import randint
-        order_sn = "{time_str}{user_id}{ran_str}".format(time_str=time.strftime("%Y%m%d%H%M%W"), user_id=self.context["request"].user.id, ran_str=randint(10, 99))
+        order_sn = "{time_str}{user_id}{ran_str}".format(time_str=time.strftime(
+            "%Y%m%d%H%M%W"), user_id=self.context["request"].user.id, ran_str=randint(10, 99))
         return order_sn
 
     # bug: "order_sn": "<bound method OrderSerializer.", order_sn 变成这样
@@ -139,4 +147,3 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderInfo
         fields = "__all__"
-        

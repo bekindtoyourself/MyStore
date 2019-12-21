@@ -14,6 +14,7 @@
 import xadmin
 from .models import Goods, GoodsCategory, GoodsImage, GoodsCategoryBrand, Banner, HotSearchWords, IndexAd
 
+
 class GoodsAdmin(object):
     list_display = ["name", "click_num", "sold_num", "fav_num", "goods_num", "market_price",
                     "shop_price", "goods_brief", "goods_desc", "is_new", "is_hot", "add_time"]
@@ -44,7 +45,8 @@ class GoodsBrandAdmin(object):
     def get_context(self):
         context = super(GoodsBrandAdmin, self).get_context()
         if 'form' in context:
-            context['form'].fields['category'].queryset = GoodsCategory.objects.filter(category_type=1)
+            context['form'].fields['category'].queryset = GoodsCategory.objects.filter(
+                category_type=1)
         return context
 
 
@@ -67,4 +69,3 @@ xadmin.site.register(GoodsCategoryBrand, GoodsBrandAdmin)
 
 xadmin.site.register(HotSearchWords, HotSearchAdmin)
 xadmin.site.register(IndexAd, IndexAdAdmin)
-
