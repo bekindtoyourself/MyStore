@@ -38,7 +38,9 @@ class GoodsListViewSet(CacheResponseMixin,
     List all goods
     """
     throttle_classes = (UserRateThrottle, AnonRateThrottle)
-    queryset = Goods.objects.all()
+    # bug: F:\Code\Python3\django_vue_store\MyStore\vuestore\lib\site-packages\rest_framework\pagination.py:198: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'goods.models.Goods'> QuerySet.
+    # fixbug: Goods.objects.all() 更改为 queryset = Goods.objects.get_queryset().order_by('id')
+    queryset = Goods.objects.get_queryset().order_by('id')
     serializer_class = GoodsSerializer
     pagination_class = GoodsPagination
     # authentication_classes = (TokenAuthentication, )
