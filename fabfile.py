@@ -40,7 +40,7 @@ def deploy(c):
         c.run('pip install -r requirements/production.txt')
         c.run('python manage.py makemigrations')
         c.run('python manage.py migrate')
-        c.run('python manage.py collectstatic')
+        c.run('python manage.py collectstatic --noinput')
 
     # 重新启动 nginx
     c.run('sudo service nginx reload')
