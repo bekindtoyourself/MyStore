@@ -1,3 +1,6 @@
+＃!/usr/bin/python
+# -- coding: utf-8 --
+
 from fabric import task
 # from invoke import Responder
 # from _credentials import github_username, github_password
