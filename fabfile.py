@@ -1,5 +1,4 @@
-＃!/usr/bin/python
-# -- coding: utf-8 --
+# -*- coding: utf-8 -*
 
 from fabric import task
 # from invoke import Responder
