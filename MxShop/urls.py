@@ -30,7 +30,6 @@ from rest_framework.authtoken import views
 from rest_framework_jwt.views import obtain_jwt_token
 
 
-
 router = DefaultRouter()
 
 # 配置 goods 的 url
@@ -74,3 +73,14 @@ urlpatterns = [
     # 第三方登录
     url('', include('social_django.urls', namespace='social')),
 ]
+
+from django.conf import settings
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        # path('__debug__/', include(debug_toolbar.urls)),
+
+        # For django versions before 2.0:
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+
+    ] + urlpatterns

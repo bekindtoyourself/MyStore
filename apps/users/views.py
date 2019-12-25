@@ -15,9 +15,9 @@ from rest_framework_jwt.serializers import jwt_encode_handler, jwt_payload_handl
 from random import choice
 
 from .serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer
+from .models import VerifyCode
 from MxShop.settings import APIKEY
 from utils.yunpian import YunPian
-from .models import VerifyCode
 
 User = get_user_model()
 
