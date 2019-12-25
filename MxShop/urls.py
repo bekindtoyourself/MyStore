@@ -84,3 +84,12 @@ if settings.DEBUG:
         url(r'^__debug__/', include(debug_toolbar.urls)),
 
     ] + urlpatterns
+
+
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
+urlpatterns = [
+    url('sentry-debug/', trigger_error),
+    # ...
+] + urlpatterns
