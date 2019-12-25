@@ -22,7 +22,7 @@ from fabric import task
 
 @task()
 def deploy(c):
-    supervisor_conf_path = '/root/etc/supervisord.conf'
+    supervisor_conf_path = '/root/etc'
     supervisor_program_name = 'mystore'
     project_root_path = '/home/sites/MyStore'
 
