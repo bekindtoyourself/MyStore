@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*
-
 from fabric import task
+
 # from invoke import Responder
 # from _credentials import github_username, github_password
 
@@ -18,6 +18,8 @@ from fabric import task
 #         response='{}\n'.format(github_password)
 #     )
 #     return [username_responder, password_responder]
+def virtualenv_(c, source, cmd):
+    c.run(source + cmd)
 
 
 @task()
@@ -25,6 +27,7 @@ def deploy(c):
     supervisor_conf_path = '/root/etc'
     supervisor_program_name = 'mystore'
     project_root_path = '/home/sites/MyStore'
+    source = 'source /home/sites/MyStore/env/bin/activate && '
 
     # 先停止应用
     with c.cd(supervisor_conf_path):
@@ -39,11 +42,10 @@ def deploy(c):
 
     # 安装依赖，迁移数据库，收集静态文件
     with c.cd(project_root_path):
-        with c.run('source /home/sites/MyStore/env/bin/activate'):
-            c.run('pip install -r requirements/production.txt')
-            c.run('python manage.py makemigrations')
-            c.run('python manage.py migrate')
-            c.run('python manage.py collectstatic --noinput')
+        virtualenv_(c, source, 'pip install -r requirements/production.txt')
+        virtualenv_(c, source, 'python manage.py makemigrations')
+        virtualenv_(c, source, 'python manage.py migrate')
+        virtualenv_(c, source, 'python manage.py collectstatic --noinput')
 
     # 重新启动 nginx
     c.run('sudo service nginx reload')
