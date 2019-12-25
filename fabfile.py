@@ -38,11 +38,12 @@ def deploy(c):
         # c.run(cmd, watchers=responders)
 
     # 安装依赖，迁移数据库，收集静态文件
-    with c.cd(project_root_path) and c.run('source /home/sites/MyStore/env/bin/activate'):
-        c.run('pip install -r requirements/production.txt')
-        c.run('python manage.py makemigrations')
-        c.run('python manage.py migrate')
-        c.run('python manage.py collectstatic --noinput')
+    with c.cd(project_root_path):
+        with c.run('source /home/sites/MyStore/env/bin/activate'):
+            c.run('pip install -r requirements/production.txt')
+            c.run('python manage.py makemigrations')
+            c.run('python manage.py migrate')
+            c.run('python manage.py collectstatic --noinput')
 
     # 重新启动 nginx
     c.run('sudo service nginx reload')
