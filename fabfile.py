@@ -42,7 +42,7 @@ def deploy(c):
 
     # 安装依赖，迁移数据库，收集静态文件
     with c.cd(project_root_path):
-        virtualenv_(c, source, 'pip install -y -r requirements/production.txt')
+        virtualenv_(c, source, 'pip install -r requirements/production.txt')
         virtualenv_(c, source, 'python manage.py makemigrations')
         virtualenv_(c, source, 'python manage.py migrate')
         virtualenv_(c, source, 'python manage.py collectstatic --noinput')
