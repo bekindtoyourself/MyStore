@@ -4,7 +4,7 @@ import re
 
 from .models import UserFav, UserLeavingMessage, UserAddress
 from goods.serializers import GoodsSerializer
-from MxShop.settings import REGEX_MOBILE
+from settings.common import REGEX_MOBILE
 
 class UserFavDetailSerializer(serializers.ModelSerializer):
     # bug:  'Goods' object is not iterable

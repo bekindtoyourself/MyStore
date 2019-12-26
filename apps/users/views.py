@@ -16,7 +16,7 @@ from random import choice
 
 from .serializers import SmsSerializer, UserRegSerializer, UserDetailSerializer
 from .models import VerifyCode
-from MxShop.settings import APIKEY
+from settings.common import APIKEY
 from utils.yunpian import YunPian
 
 User = get_user_model()

@@ -9,7 +9,7 @@ from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
 
 from .models import VerifyCode
-from MxShop.settings import REGEX_MOBILE
+from settings.common import REGEX_MOBILE
 
 User = get_user_model()
 

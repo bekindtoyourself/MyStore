@@ -8,7 +8,7 @@ from goods.models import Goods
 from .models import ShoppingCart, OrderInfo, OrderGoods
 from goods.serializers import GoodsSerializer
 from utils.alipay import AliPay
-from MxShop.settings import private_key_path, ali_pub_key_path
+from settings.common import private_key_path, ali_pub_key_path
 
 # bug: object() takes no parameters
 # fixbug: 'class ShopCartDetailSerializer():' 添加 参数 -> class ShopCartDetailSerializer(serializers.ModelSerializer):

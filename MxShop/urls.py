@@ -17,7 +17,7 @@ from django.conf.urls import url, include
 from django.views.static import serve
 from django.views.generic import TemplateView
 
-from MxShop.settings import MEDIA_ROOT
+from settings.common import MEDIA_ROOT
 from goods.views import GoodsListViewSet, CategoryViewSet, BannerViewset, IndexCategoryViewset
 from users.views import SmsCodeViewset, UserViewset
 from user_operation.views import UserFavViewset, LeavingMessageViewset, AddressViewset

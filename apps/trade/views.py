@@ -19,7 +19,7 @@ from utils.permissions import IsOwnerOrReadOnly
 from utils.alipay import AliPay
 from .models import ShoppingCart, OrderInfo, OrderGoods
 from goods.models import Goods
-from MxShop.settings import ali_pub_key_path, private_key_path
+from settings.common import ali_pub_key_path, private_key_path
 
 
 User = get_user_model()
